@@ -14,16 +14,36 @@ volatile uint32_t timetick_count=0;	// global variable for time tick count
 volatile uint8_t mainloop_ticks=0;
 XMC_RTC_TIME_t timeval;
 
-STRUCT_SENSOR_t Pressure =
+/*!
+ * struct for Pressure measurement
+ */
+struct pressure S_DPS368 =
 {
-		.ave_value		= 100.0f,	/* default value				*/
-		.max_value 		= 1000.0f,	/* max value for temp? 			*/
-		.min_value 		= 0.0f,		/* min value    				*/
-		.ave_value_old 	= 0.0f,		/* take same value as ave_value	*/
-		.ave_factor		= 8U,		/* weight for average filter	*/
+		.pressure.ave_value		= 100.0f,	/* default value				*/
+		.pressure.max_value		= 1000.0f,	/* max value for temp? 			*/
+		.pressure.min_value		= 0.0f,		/* min value    				*/
+		.pressure.ave_value_old 	= 0.0f,		/* take same value as ave_value	*/
+		.pressure.ave_factor		= 8U,		/* weight for average filter	*/
 		.oversampling	= 7U,		/* oversampling factor =7		*/
 		.location		= 1U,		/* where is the sensor located	*/
-		.DevID			= 0x40U,	/* I2C-Dev.Addr. in 8 bit notation */
+		.DevID			= 0x64U,	/* I2C-Dev.Addr. in 8 bit notation */
+		.status			= 0x00U		/* different states, 0x00 is OK	*/
+};
+
+/*!
+ * struct for Flow measurement
+ */
+struct flow S_SFM3200 =
+{
+		.flow.ave_value		= 00.0f,	/* default value				*/
+		.flow.max_value 		= 00.0f,	/* max value for temp? 			*/
+		.flow.min_value 		= 0.0f,		/* min value    				*/
+		.flow.ave_value_old 	= 0.0f,		/* take same value as ave_value	*/
+		.flow.ave_factor		= 8U,		/* weight for average filter	*/
+		.offset			=32000U,	/* Offset for the sensor		*/
+		.scale			=140.0f,		/* Scale factor for Air and N2 is 140.0, O2 is 142.8*/
+		.location		= 1U,		/* where is the sensor located	*/
+		.DevID			= 0x80U,	/* I2C-Dev.Addr. in 8 bit notation */
 		.status			= 0x00U		/* different states, 0x00 is OK	*/
 };
 
@@ -110,7 +130,7 @@ void update_Pressure(void)
 //	double BMP180_Pressure;
 //	const int16_t meters_from_sealevel = 420;  // where we live
 
-	 Pressure.status = measPressure_DPS368(&Pressure.raw_value,Pressure.oversampling);
+	 S_DPS368.status = measPressure_DPS368(&S_DPS368.pressure.raw_value,S_DPS368.oversampling);
 
 //	// sensor have to be asserted by begin() in init process;
 //	measurement_delay=start_BMP180_Temp();// have to be started prior measuring
@@ -128,5 +148,13 @@ void update_Pressure(void)
 //	if(!status) return status;
 //
 //	Baro.raw_value=calc_BMP180_absPressure(BMP180_Pressure,meters_from_sealevel);
+
+}
+
+void update_Flow(void)
+{
+	S_SFM3200.flow.raw_value = (measFlow_SFM3200() - S_SFM3200.offset)/ S_SFM3200.scale;
+
+
 
 }

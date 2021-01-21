@@ -6,6 +6,7 @@
  */
 
 #include "DPS368\Dps368.h"
+#include "sfm3200\sfm3000wedo.h"
 
 
 extern "C" {
@@ -13,20 +14,19 @@ extern "C" {
 }
 
 // Global Variables
-// Dps368 Opject
+// Dps368 Object
 Dps368 obj_DPS368 = Dps368();
+
+// SFM3200 Object
+
+SFM3000wedo obj_SFM3200 = SFM3000wedo(S_SFM3200.DevID);
+
 
 
 extern "C"
 {
-STRUCT_SENSOR_t S_DPS368;
-
 	void begin_DPS368(uint8_t I2C_address)			{return obj_DPS368.begin(I2C_address);}
 	int16_t measPressure_DPS368(float *i,uint8_t j) {return obj_DPS368.measurePressureOnce( *i, j);}
-//	uint8_t start_BMP180_Temp() {return obj_BMP180.startTemperature();}
-//	char get_BMP180_Temperature(double *p) 				{return obj_BMP180.getTemperature(*p);}
-//	char start_BMP180_Pressure(char i) 					{return obj_BMP180.startPressure(i);}
-//	char get_BMP180_Pressure(double *p,double t) 		{return obj_BMP180.getPressure(*p,t);}
-//	double calc_BMP180_absPressure(double P, double A)	{return obj_BMP180.sealevel(P,A);}
-
+	void begin_SFM3200() 							{return obj_SFM3200.init();}
+	uint16_t measFlow_SFM3200()						{return obj_SFM3200.getvalue();}
 }

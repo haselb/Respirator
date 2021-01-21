@@ -49,6 +49,8 @@ int main(void)
   {
 
 	update_Pressure();
+	update_Flow();
+
 
 
 	  while(mainloop_ticks<1);  // main loop endurance is 1 second

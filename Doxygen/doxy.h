@@ -57,15 +57,18 @@
  * <tr><th>Nr.   <th> Date		  <th> Comment		</td>
  * <tr><td>0.0.0 <td> 2021-Jan-16 <td> Release first draft, initiate Sensor DPS368 from Infineon Git repository
  * <tr><td>0.0.1 <td> 2021-Jan-17 <td> Hosted at git, added LED1 for Heart Beat Indication, improve I2C Error handling
- * <tr><td>0.0.2 <td> 2021-Jan- <td>
- * <tr><td>1.0.3 <td> 2021-Jan- <td>
- * <tr><td>1.0.4 <td> 2021-Jan- <td>
+ * <tr><td>0.1.0 <td> 2021-Jan-21 <td> Add Sensor SFM3200, change Struct for Sensors
+ * <tr><td>0.1.2 <td> 2021-Jan-21 <td>
+ *
+ *
+ * <tr><td>1.0.0 <td> 2021-Jan- <td> Fist Release for delivery
+ * <tr><td>1.0.1 <td> 2021-Jan- <td>
  * </table>
  *
  */
 #define MAJOR_VERSION 0U
-#define MINOR_VERSION 0U
-#define PATCH_VERSION 2U
+#define MINOR_VERSION 1U
+#define PATCH_VERSION 0U
 
  /*! \page Hardware Hardware
  * @{
