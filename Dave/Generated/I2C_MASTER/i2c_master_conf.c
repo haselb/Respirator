@@ -115,14 +115,14 @@ const XMC_I2C_CH_CONFIG_t I2C_MASTER_0_channel_config =
 
 static void I2C_MASTER_0_disable_io(void)
 {
-  XMC_GPIO_SetMode((XMC_GPIO_PORT_t *)PORT2_BASE, (uint8_t)14, XMC_GPIO_MODE_INPUT_TRISTATE);
-  XMC_GPIO_SetMode((XMC_GPIO_PORT_t *)PORT5_BASE, (uint8_t)8, XMC_GPIO_MODE_INPUT_TRISTATE);
+  XMC_GPIO_SetMode((XMC_GPIO_PORT_t *)PORT0_BASE, (uint8_t)5, XMC_GPIO_MODE_INPUT_TRISTATE);
+  XMC_GPIO_SetMode((XMC_GPIO_PORT_t *)PORT0_BASE, (uint8_t)11, XMC_GPIO_MODE_INPUT_TRISTATE);
 }
 
 static void I2C_MASTER_0_enable_io(void)
 {
-  XMC_GPIO_SetMode((XMC_GPIO_PORT_t *)PORT2_BASE, (uint8_t)14, I2C_MASTER_0_sda_pin_config.mode);
-  XMC_GPIO_SetMode((XMC_GPIO_PORT_t *)PORT5_BASE, (uint8_t)8, I2C_MASTER_0_scl_pin_config.mode);
+  XMC_GPIO_SetMode((XMC_GPIO_PORT_t *)PORT0_BASE, (uint8_t)5, I2C_MASTER_0_sda_pin_config.mode);
+  XMC_GPIO_SetMode((XMC_GPIO_PORT_t *)PORT0_BASE, (uint8_t)11, I2C_MASTER_0_scl_pin_config.mode);
 }
 
 const I2C_MASTER_CONFIG_t I2C_MASTER_0_config =
@@ -182,8 +182,8 @@ void I2C_MASTER_0_init(void)
   const uint32_t rx_fifo_events = (uint32_t)(XMC_USIC_CH_RXFIFO_EVENT_CONF_ALTERNATE | XMC_USIC_CH_RXFIFO_EVENT_CONF_STANDARD);
   XMC_I2C_CH_Init(XMC_I2C1_CH0, &I2C_MASTER_0_channel_config);
 
-  XMC_USIC_CH_SetInputSource(XMC_I2C1_CH0, XMC_USIC_CH_INPUT_DX0, 3);
-  XMC_USIC_CH_SetInputSource(XMC_I2C1_CH0, XMC_USIC_CH_INPUT_DX1, 1);
+  XMC_USIC_CH_SetInputSource(XMC_I2C1_CH0, XMC_USIC_CH_INPUT_DX0, 1);
+  XMC_USIC_CH_SetInputSource(XMC_I2C1_CH0, XMC_USIC_CH_INPUT_DX1, 0);
 
   /* configure i2c tx fifo */
   XMC_USIC_CH_TXFIFO_Configure(XMC_I2C1_CH0,
@@ -212,8 +212,8 @@ void I2C_MASTER_0_init(void)
   XMC_I2C_CH_EnableEvent(XMC_I2C1_CH0, enabled_protocol_events);
   XMC_I2C_CH_Start(XMC_I2C1_CH0);
 
-  XMC_GPIO_Init((XMC_GPIO_PORT_t *)PORT2_BASE, (uint8_t)14, &I2C_MASTER_0_sda_pin_config);
-  XMC_GPIO_Init((XMC_GPIO_PORT_t *)PORT5_BASE, (uint8_t)8, &I2C_MASTER_0_scl_pin_config);
+  XMC_GPIO_Init((XMC_GPIO_PORT_t *)PORT0_BASE, (uint8_t)5, &I2C_MASTER_0_sda_pin_config);
+  XMC_GPIO_Init((XMC_GPIO_PORT_t *)PORT0_BASE, (uint8_t)11, &I2C_MASTER_0_scl_pin_config);
 /* Tx interrupt priority settings */
   NVIC_SetPriority((IRQn_Type)91, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),63,0));
   NVIC_EnableIRQ((IRQn_Type)91);/* Rx interrupt priority settings */

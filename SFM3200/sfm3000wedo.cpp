@@ -60,6 +60,7 @@ void SFM3000wedo::init()
 
 	val=0x0;
 
+	Soft_WDG_1(ON);	// if no acknowledge occurs, program would wait infintiy in while loop
     I2C_MASTER_Transmit(&I2C_MASTER_0,false,mI2cAddress,val,1,true);
 	while((tx_completion_0 == 0) && (flag_I2C_NACK == 0) && (flag_eject_at_I2C_NACK == 0));
 	tx_completion_0 = 0;
@@ -152,7 +153,7 @@ float SFM3000wedo::getvalue()
 	}
 
 	val=0x0;
-
+	Soft_WDG_1(ON);	// if no acknowledge occurs, program would wait infintiy in while loop
     I2C_MASTER_Transmit(&I2C_MASTER_0,false,mI2cAddress,val,1,true);
 	while((tx_completion_0 == 0) && (flag_I2C_NACK == 0) && (flag_eject_at_I2C_NACK == 0));
 	tx_completion_0 = 0;

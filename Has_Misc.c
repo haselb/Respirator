@@ -8,6 +8,7 @@
 #include <Dave.h>
 #include "Has_Misc.h"
 #include "Cpp2C.h"
+#include "statistics.h"
 
 
 volatile uint32_t timetick_count=0;	// global variable for time tick count
@@ -26,7 +27,7 @@ struct pressure S_DPS368 =
 		.pressure.ave_factor		= 8U,		/* weight for average filter	*/
 		.oversampling	= 7U,		/* oversampling factor =7		*/
 		.location		= 1U,		/* where is the sensor located	*/
-		.DevID			= 0x64U,	/* I2C-Dev.Addr. in 8 bit notation */
+		.DevID			= 0x76U,	/* I2C-Dev.Addr. in 8 bit notation */
 		.status			= 0x00U		/* different states, 0x00 is OK	*/
 };
 
@@ -120,41 +121,44 @@ void RTC_init(void)
 	RTC_Start();
 }
 
+
+
+
+/*!
+ * @brief 	   Function updates pressure value
+ * @param[in]  None
+ * @param[out] None
+ * @retval     void
+ * @pre        invoked in main loop
+ * @post       Function updates raw value of sensor and calculates average value
+ * @attention  None
+ * @note       None
+ */
 void update_Pressure(void)
 {
-//	char status;
-//	uint32_t baseline;
-//	uint8_t measurement_delay;
-//	double BMP180_Temperature;
-//	uint8_t oversampling_value=3;
-//	double BMP180_Pressure;
-//	const int16_t meters_from_sealevel = 420;  // where we live
 
 	 S_DPS368.status = measPressure_DPS368(&S_DPS368.pressure.raw_value,S_DPS368.oversampling);
 
-//	// sensor have to be asserted by begin() in init process;
-//	measurement_delay=start_BMP180_Temp();// have to be started prior measuring
-//	if(measurement_delay) delay100us(50);
-//	else return true;
-//
-//	status= get_BMP180_Temperature(&BMP180_Temperature);
-//	if(!status) return status;
-//
-//	measurement_delay=start_BMP180_Pressure(oversampling_value);
-//	if(measurement_delay) delay100us(800);// waitstates for oversampling=3 76,5ms
-//	else return true;
-//
-//	status= get_BMP180_Pressure(&BMP180_Pressure,BMP180_Temperature);
-//	if(!status) return status;
-//
-//	Baro.raw_value=calc_BMP180_absPressure(BMP180_Pressure,meters_from_sealevel);
+	   	// calculate and update average values and trend sign if available
+	 calc_double_exp_smoothing(&S_DPS368.pressure);
 
 }
 
+
+/*!
+ * @brief 	   Function updates flow value
+ * @param[in]  None
+ * @param[out] None
+ * @retval     void
+ * @pre        invoked in main loop
+ * @post       Function updates raw value of sensor and calculates average value
+ * @attention  None
+ * @note       None
+ */
 void update_Flow(void)
 {
 	S_SFM3200.flow.raw_value = (measFlow_SFM3200() - S_SFM3200.offset)/ S_SFM3200.scale;
 
-
+	calc_double_exp_smoothing(&S_SFM3200.flow);
 
 }
