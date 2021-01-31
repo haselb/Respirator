@@ -35,6 +35,7 @@ int16_t Dps368::setInterruptSources(uint8_t intr_source, uint8_t polarity)
 
 void Dps368::init(void)
 {
+
 	int16_t prodId = readByteBitfield(registers[PROD_ID]);
 	if (prodId < 0)
 	{

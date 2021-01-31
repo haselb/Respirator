@@ -59,8 +59,9 @@
  * <tr><td>0.0.1 <td> 2021-Jan-17 <td> Hosted at git, added LED1 for Heart Beat Indication, improve I2C Error handling
  * <tr><td>0.1.0 <td> 2021-Jan-21 <td> Add Sensor SFM3200, change Struct for Sensors
  * <tr><td>0.1.1 <td> 2021-Jan-24 <td> Test Workflow with XMC4700 Relax Kit Board add exponential smooting
- * <tr><td>0.1.2 <td> 2021-Jan- <td>
+ * <tr><td>0.1.2 <td> 2021-Jan-31 <td> Add LCM, check DPS368 for I2C-Handling by Oscilloscope, add three PIN-Interrupt KEYs
  * <tr><td>0.1.3 <td> 2021-Jan- <td>
+ * <tr><td>0.1.4 <td> 2021-Jan- <td>
  *
  *
  * <tr><td>1.0.0 <td> 2021-Jan- <td> Fist Release for delivery
@@ -70,7 +71,7 @@
  */
 #define MAJOR_VERSION 0U
 #define MINOR_VERSION 1U
-#define PATCH_VERSION 1U
+#define PATCH_VERSION 2U
 
  /*! \page Hardware Hardware
  * @{

@@ -12,6 +12,8 @@
 #include "init.h"
 #include "Has_misc.h"
 #include "Cpp2C.h"
+#include "LCM.h"
+//#include "isot_i2c.h"
 
 
 
@@ -42,15 +44,15 @@ int main(void)
     }
   }
   init(); // init all devices and other stuff
-
+  //find_I2C_device();
 
   /* Placeholder for user application code. The while loop below can be replaced with user application code. */
   while(1U)
   {
 
 	update_Pressure();
-	update_Flow();
-
+//	update_Flow();
+//	update_LCD();
 
 
 	  while(mainloop_ticks<1);  // main loop endurance is 1 second

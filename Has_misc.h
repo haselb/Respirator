@@ -11,6 +11,50 @@
 #include <Dave.h>
 
 
+#define ON 1
+#define OFF 0
+
+extern const char* WeekDay[];
+
+extern volatile uint8_t mainloop_ticks;
+extern XMC_RTC_TIME_t timeval;
+
+extern void RTC_init(void);
+extern void delay100us(uint32_t dwUs);
+extern void update_Pressure(void);
+extern void update_Flow(void);
+
+
+
+/**
+* @ingroup FLAG ARRAY
+*
+* @brief Flags for whole system Respiratory
+*/
+typedef struct FLAG_ARRAY
+{
+	uint16_t KEY_UP					:1; //!< flag for keypressed
+	uint16_t KEY_DOWN				:1; //!< flag for keypressed
+	uint16_t KEY_STOP				:1;	//!< flag for keypressed
+	uint16_t toggle_W				:1; //!< toggle doubledot in time display
+	uint16_t res12					:1; //!<
+	uint16_t res11					:1; //!<
+	uint16_t res10					:1; //!<
+	uint16_t res9					:1; //!<
+	uint16_t res8					:1; //!<
+	uint16_t res7					:1; //!<
+	uint16_t res6					:1; //!<
+	uint16_t res5					:1; //!<
+	uint16_t res4					:1; //!<
+	uint16_t res3					:1; //!<
+	uint16_t res2					:1; //!<
+	uint16_t res1					:1; //!<
+}FLAG_ARRAY_t;
+
+extern volatile FLAG_ARRAY_t f;
+
+
+
 /**
 * @ingroup STRUCT_VALUE_t
 *
@@ -54,16 +98,6 @@ extern struct pressure S_DPS368;
 extern struct flow S_SFM3200;
 
 
-#define ON 1
-#define OFF 0
-
-extern volatile uint8_t mainloop_ticks;
-extern XMC_RTC_TIME_t timeval;
-
-extern void RTC_init(void);
-extern void delay100us(uint32_t dwUs);
-extern void update_Pressure(void);
-extern void update_Flow(void);
 
 
 #endif /* HAS_MISC_H_ */

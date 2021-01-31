@@ -185,6 +185,11 @@ void I2C_MASTER_0_init(void)
   XMC_USIC_CH_SetInputSource(XMC_I2C1_CH0, XMC_USIC_CH_INPUT_DX0, 1);
   XMC_USIC_CH_SetInputSource(XMC_I2C1_CH0, XMC_USIC_CH_INPUT_DX1, 0);
 
+  XMC_USIC_CH_EnableInputDigitalFilter(XMC_I2C1_CH0, XMC_USIC_CH_INPUT_DX0);
+  XMC_USIC_CH_EnableInputSync(XMC_I2C1_CH0, XMC_USIC_CH_INPUT_DX0);
+  XMC_USIC_CH_EnableInputDigitalFilter(XMC_I2C1_CH0, XMC_USIC_CH_INPUT_DX1);
+  XMC_USIC_CH_EnableInputSync(XMC_I2C1_CH0, XMC_USIC_CH_INPUT_DX1);
+    
   /* configure i2c tx fifo */
   XMC_USIC_CH_TXFIFO_Configure(XMC_I2C1_CH0,
                                16,

@@ -67,6 +67,14 @@
 
 extern const DIGITAL_IO_t DIGITAL_O_LED_HB; 
 	
+extern const DIGITAL_IO_t DIGITAL_O_LCD_RS; 
+	
+extern const DIGITAL_IO_t DIGITAL_O_LCD_RW; 
+	
+extern const DIGITAL_IO_t DIGITAL_O_LCD_EN; 
+	
+extern const DIGITAL_IO_t DIGITAL_O_LCD_RESET; 
+	
  
 #endif  /* DIGITAL_IO_EXTERN_H */
 

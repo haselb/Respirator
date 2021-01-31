@@ -66,3 +66,51 @@ const DIGITAL_IO_t DIGITAL_O_LED_HB =
   .hwctrl = XMC_GPIO_HWCTRL_DISABLED
 };
 		
+const DIGITAL_IO_t DIGITAL_O_LCD_RS =
+{
+  .gpio_port = XMC_GPIO_PORT5,
+  .gpio_pin = 6U,
+  .gpio_config = {
+    .mode = XMC_GPIO_MODE_OUTPUT_PUSH_PULL,
+    .output_level = XMC_GPIO_OUTPUT_LEVEL_LOW,
+
+  },
+  .hwctrl = XMC_GPIO_HWCTRL_DISABLED
+};
+		
+const DIGITAL_IO_t DIGITAL_O_LCD_RW =
+{
+  .gpio_port = XMC_GPIO_PORT5,
+  .gpio_pin = 7U,
+  .gpio_config = {
+    .mode = XMC_GPIO_MODE_OUTPUT_PUSH_PULL,
+    .output_level = XMC_GPIO_OUTPUT_LEVEL_LOW,
+
+  },
+  .hwctrl = XMC_GPIO_HWCTRL_DISABLED
+};
+		
+const DIGITAL_IO_t DIGITAL_O_LCD_EN =
+{
+  .gpio_port = XMC_GPIO_PORT5,
+  .gpio_pin = 4U,
+  .gpio_config = {
+    .mode = XMC_GPIO_MODE_OUTPUT_PUSH_PULL,
+    .output_level = XMC_GPIO_OUTPUT_LEVEL_LOW,
+
+  },
+  .hwctrl = XMC_GPIO_HWCTRL_DISABLED
+};
+		
+const DIGITAL_IO_t DIGITAL_O_LCD_RESET =
+{
+  .gpio_port = XMC_GPIO_PORT5,
+  .gpio_pin = 5U,
+  .gpio_config = {
+    .mode = XMC_GPIO_MODE_OUTPUT_PUSH_PULL,
+    .output_level = XMC_GPIO_OUTPUT_LEVEL_LOW,
+
+  },
+  .hwctrl = XMC_GPIO_HWCTRL_DISABLED
+};
+		

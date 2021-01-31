@@ -584,6 +584,7 @@ int16_t DpsClass::readByte(uint8_t regAddress)
 	}
 	#endif
 
+	uint8_t regValue=0;
 
 /*	m_i2cbus->beginTransmission(m_slaveAddress);
 	m_i2cbus->write(regAddress);
@@ -599,7 +600,23 @@ int16_t DpsClass::readByte(uint8_t regAddress)
 	}*/
 
 	Soft_WDG_1(ON);
-	I2C_MASTER_Receive(&I2C_MASTER_0,true,m_slaveAddress,&regAddress,1,true,true);
+	I2C_MASTER_Transmit(&I2C_MASTER_0,true,m_slaveAddress,&regAddress,1,false);
+	while((tx_completion_0 == 0) && (flag_I2C_NACK == 0) && (flag_eject_at_I2C_NACK == 0));
+	tx_completion_0 = 0;
+	Soft_WDG_1(OFF);
+
+	if(flag_I2C_NACK || flag_eject_at_I2C_NACK)
+	{
+		flag_I2C_NACK=0;
+		flag_eject_at_I2C_NACK=0;
+		return (DPS__FAIL_UNKNOWN);
+	}
+
+	delay100us(200);
+
+
+	Soft_WDG_1(ON);
+	I2C_MASTER_Receive(&I2C_MASTER_0,true,m_slaveAddress,&regValue,1,true,true);
 	while((rx_completion_0 == 0) && (flag_I2C_NACK == 0) && (flag_eject_at_I2C_NACK == 0));
 	rx_completion_0 = 0;
 	Soft_WDG_1(OFF);
@@ -611,8 +628,9 @@ int16_t DpsClass::readByte(uint8_t regAddress)
 	    	 return DPS__FAIL_UNKNOWN;
 	    }
 
+
 	 //   delay100us(1);
-	    return DPS__SUCCEEDED;
+	    return regValue;
 
 }
 

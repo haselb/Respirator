@@ -14,20 +14,30 @@
 volatile uint32_t timetick_count=0;	// global variable for time tick count
 volatile uint8_t mainloop_ticks=0;
 XMC_RTC_TIME_t timeval;
+const char* WeekDay[]={"So","Mo","Di","Mi","Do","Fr","Sa"};
+
+volatile FLAG_ARRAY_t f;
+
+
+
+
 
 /*!
  * struct for Pressure measurement
  */
 struct pressure S_DPS368 =
 {
-		.pressure.ave_value		= 100.0f,	/* default value				*/
-		.pressure.max_value		= 1000.0f,	/* max value for temp? 			*/
+		.pressure.ave_value		= 0.0f,	/* default value				*/
+		.pressure.max_value		= 0.0f,	/* max value for temp? 			*/
 		.pressure.min_value		= 0.0f,		/* min value    				*/
 		.pressure.ave_value_old 	= 0.0f,		/* take same value as ave_value	*/
-		.pressure.ave_factor		= 8U,		/* weight for average filter	*/
+		.pressure.ave_factor		= 0.08f,		/* weight for average filter	*/
+		.pressure.tre_value			= 0.0f,
+		.pressure.tre_value_old		= 0.0f,
+		.pressure.tre_factor		= 0.05f,
 		.oversampling	= 7U,		/* oversampling factor =7		*/
 		.location		= 1U,		/* where is the sensor located	*/
-		.DevID			= 0x76U,	/* I2C-Dev.Addr. in 8 bit notation */
+		.DevID			= 0xEEU,	/* I2C-Dev.Addr. in 8 bit notation */
 		.status			= 0x00U		/* different states, 0x00 is OK	*/
 };
 
@@ -49,7 +59,67 @@ struct flow S_SFM3200 =
 };
 
 
- void UserIRQHandler(void)
+
+/*!
+ * @brief 	   Callback Function initiated by PIN IRQ, called at key pressed.
+ * @param[in]  None.
+ * @param[out] None.
+ * @retval     None.
+ * @pre        DAVE RTC-App is utilized.
+ * @post       Approproiate flag is set.
+ * @attention  -
+ * @note       -
+ */
+void PinIRQHandler_UP(void)
+{
+  f.KEY_UP=1;
+}
+
+
+/*!
+ * @brief 	   Callback Function initiated by PIN IRQ, called at key pressed.
+ * @param[in]  None.
+ * @param[out] None.
+ * @retval     None.
+ * @pre        DAVE RTC-App is utilized.
+ * @post       Approproiate flag is set.
+ * @attention  -
+ * @note       -
+ */
+void PinIRQHandler_DOWN(void)
+{
+  f.KEY_DOWN=1;
+}
+
+
+/*!
+ * @brief 	   Callback Function initiated by PIN IRQ, called at key pressed.
+ * @param[in]  None.
+ * @param[out] None.
+ * @retval     None.
+ * @pre        DAVE RTC-App is utilized.
+ * @post       Approproiate flag is set.
+ * @attention  -
+ * @note       -
+ */
+void PinIRQHandler_STOP(void)
+{
+  f.KEY_STOP=1;
+}
+
+
+
+/*!
+ * @brief 	   Callback Function initiated by Timer IRQ, called all 1ms.
+ * @param[in]  None.
+ * @param[out] None.
+ * @retval     None.
+ * @pre        DAVE RTC-App is utilized.
+ * @post        variable timetick_count is incremented.
+ * @attention  -
+ * @note       -
+ */
+ void TimerIRQHandler(void)
  {
 
  	/* Acknowledge the period match interrupt*/
@@ -65,7 +135,7 @@ struct flow S_SFM3200 =
   * @param[in]  uint32_t dwUs
   * @param[out] None
   * @retval     void
-  * @pre        manages TIMER_0-IRQ
+  * @pre        initiate TIMER_0-IRQ before.
   * @post       None
   * @attention  None
   * @note       This routine serves the TIMER_0.
@@ -140,7 +210,7 @@ void update_Pressure(void)
 	 S_DPS368.status = measPressure_DPS368(&S_DPS368.pressure.raw_value,S_DPS368.oversampling);
 
 	   	// calculate and update average values and trend sign if available
-	 calc_double_exp_smoothing(&S_DPS368.pressure);
+	 //calc_double_exp_smoothing(&S_DPS368.pressure);
 
 }
 

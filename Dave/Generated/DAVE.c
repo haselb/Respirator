@@ -101,6 +101,46 @@ __WEAK DAVE_STATUS_t DAVE_Init(void)
   {
 	 /**  Initialization of DIGITAL_IO APP instance DIGITAL_O_LED_HB */
 	 init_status = (DAVE_STATUS_t)DIGITAL_IO_Init(&DIGITAL_O_LED_HB); 
+   } 
+  if (init_status == DAVE_STATUS_SUCCESS)
+  {
+	 /**  Initialization of DIGITAL_IO APP instance DIGITAL_O_LCD_RS */
+	 init_status = (DAVE_STATUS_t)DIGITAL_IO_Init(&DIGITAL_O_LCD_RS); 
+   } 
+  if (init_status == DAVE_STATUS_SUCCESS)
+  {
+	 /**  Initialization of DIGITAL_IO APP instance DIGITAL_O_LCD_RW */
+	 init_status = (DAVE_STATUS_t)DIGITAL_IO_Init(&DIGITAL_O_LCD_RW); 
+   } 
+  if (init_status == DAVE_STATUS_SUCCESS)
+  {
+	 /**  Initialization of DIGITAL_IO APP instance DIGITAL_O_LCD_EN */
+	 init_status = (DAVE_STATUS_t)DIGITAL_IO_Init(&DIGITAL_O_LCD_EN); 
+   } 
+  if (init_status == DAVE_STATUS_SUCCESS)
+  {
+	 /**  Initialization of DIGITAL_IO APP instance DIGITAL_O_LCD_RESET */
+	 init_status = (DAVE_STATUS_t)DIGITAL_IO_Init(&DIGITAL_O_LCD_RESET); 
+   } 
+  if (init_status == DAVE_STATUS_SUCCESS)
+  {
+	 /**  Initialization of PIN_INTERRUPT APP instance PIN_INTERRUPT_STOP */
+	 init_status = (DAVE_STATUS_t)PIN_INTERRUPT_Init(&PIN_INTERRUPT_STOP); 
+   } 
+  if (init_status == DAVE_STATUS_SUCCESS)
+  {
+	 /**  Initialization of PIN_INTERRUPT APP instance PIN_INTERRUPT_DOWN */
+	 init_status = (DAVE_STATUS_t)PIN_INTERRUPT_Init(&PIN_INTERRUPT_DOWN); 
+   } 
+  if (init_status == DAVE_STATUS_SUCCESS)
+  {
+	 /**  Initialization of PIN_INTERRUPT APP instance PIN_INTERRUPT_UP */
+	 init_status = (DAVE_STATUS_t)PIN_INTERRUPT_Init(&PIN_INTERRUPT_UP); 
+   } 
+  if (init_status == DAVE_STATUS_SUCCESS)
+  {
+	 /**  Initialization of BUS_IO APP instance BUS_O_LCD_D */
+	 init_status = (DAVE_STATUS_t)BUS_IO_Init(&BUS_O_LCD_D); 
    }  
   return init_status;
 } /**  End of function DAVE_Init */
