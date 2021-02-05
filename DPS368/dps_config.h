@@ -55,7 +55,7 @@
 
 //we use 0.1 ms units for time calculations, so 10 units are one millisecond
 //#define DPS__BUSYTIME_SCALING 10U  --> in Arduino world
-#define DPS__BUSYTIME_SCALING 1U  /*-- by delay_100us()*/
+#define DPS__BUSYTIME_SCALING 10U  /*-- by delay_100us()*/
 
 #define DPS__NUM_OF_SCAL_FACTS 8
 

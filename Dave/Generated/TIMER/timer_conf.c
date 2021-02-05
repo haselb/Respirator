@@ -86,7 +86,7 @@ TIMER_t TIMER_0 =
 {
   .ccu4_slice_ptr         = (XMC_CCU4_SLICE_t*) CCU43_CC43,
   .ccu4_slice_number      = 3U,
-  .time_interval_value_us = 100U,
+  .time_interval_value_us = 10000U,
   .timer_max_value_us     = 1491285300U,
   .timer_min_value_us     = 10U,
   .global_ccu4_handler    = (GLOBAL_CCU4_t*)&GLOBAL_CCU4_0, 
@@ -95,8 +95,8 @@ TIMER_t TIMER_0 =
                                        (uint32_t)XMC_CCU4_SHADOW_TRANSFER_PRESCALER_SLICE_3),
   .ccu4_period_match_node = XMC_CCU4_SLICE_SR_ID_1,
   .timer_module           = TIMER_MODULE_CCU4,
-  .period_value           = 143U,
-  .start_control          = true,
+  .period_value           = 14399U,
+  .start_control          = false,
   .period_match_enable    = true,
   .initialized            = false
 };
