@@ -6,9 +6,11 @@
  */
 
 #include <Dave.h>
+#include <stdio.h>
 #include "Has_Misc.h"
 #include "Cpp2C.h"
 #include "statistics.h"
+#include "LCM.h"
 
 
 volatile uint32_t timetick_count=0;	// global variable for time tick count
@@ -19,9 +21,6 @@ const char* WeekDay[]={"So","Mo","Di","Mi","Do","Fr","Sa"};
 volatile FLAG_ARRAY_t f;
 
 
-
-
-
 /*!
  * struct for Pressure measurement
  */
@@ -30,15 +29,18 @@ struct pressure S_DPS368 =
 		.pressure.ave_value		= 0.0f,	/* default value				*/
 		.pressure.max_value		= 0.0f,	/* max value for temp? 			*/
 		.pressure.min_value		= 0.0f,		/* min value    				*/
-		.pressure.ave_value_old 	= 0.0f,		/* take same value as ave_value	*/
-		.pressure.ave_factor		= 0.08f,		/* weight for average filter	*/
-		.pressure.tre_value			= 0.0f,
-		.pressure.tre_value_old		= 0.0f,
-		.pressure.tre_factor		= 0.05f,
-		.oversampling	= 7U,		/* oversampling factor =7		*/
-		.location		= 1U,		/* where is the sensor located	*/
-		.DevID			= 0xEEU,	/* I2C-Dev.Addr. in 8 bit notation */
-		.status			= 0x00U		/* different states, 0x00 is OK	*/
+		.pressure.ave_value_old = 0.0f,		/* take same value as ave_value	*/
+		.pressure.ave_factor	= 0.08f,		/* weight for average filter	*/
+		.pressure.tre_value		= 0.0f,
+		.pressure.tre_value_old	= 0.0f,
+		.pressure.tre_factor	= 0.05f,
+		.temp_mr				= 2U, /* 2^temp_mr measurement results per second (value from 0 to 7)*/
+		.temp_osr				= 2U, /* 2^temp_osr temperature oversampling rate per result (value from 0 to 7) */
+		.prs_mr					= 2U, /* 2^prs_mr measurement results per second (value from 0 to 7)*/
+		.prs_osr				= 2U, /* 2^prs_osr pressure oversampling rate per result (value from 0 to 7) */
+		.location				= 1U,		/* where is the sensor located	*/
+		.DevID					= 0xEEU,	/* I2C-Dev.Addr. in 8 bit notation */
+		.status					= 0x00U		/* different states, 0x00 is OK	*/
 };
 
 /*!
@@ -192,6 +194,28 @@ void RTC_init(void)
 }
 
 
+/*!
+ * @brief 	   Function updates temperature value
+ * @param[in]  None
+ * @param[out] None
+ * @retval     void
+ * @pre        invoked in main loop
+ * @post       Function updates raw value of sensor and calculates average value
+ * @attention  None
+ * @note       None
+ */
+void update_Temperature(void)
+{
+
+
+	S_DPS368.status = measTemperature_DPS368(&S_DPS368.temperature.raw_value, S_DPS368.temp_osr);
+
+	if(S_DPS368.status != 0)
+	{
+		sprintf(buffer,"DPS368 reports 0x%02X", S_DPS368.status);
+		LCD_string(4,0,buffer);
+	}
+}
 
 
 /*!
@@ -207,7 +231,7 @@ void RTC_init(void)
 void update_Pressure(void)
 {
 
-	 S_DPS368.status = measPressure_DPS368(&S_DPS368.pressure.raw_value,S_DPS368.oversampling);
+	 S_DPS368.status = measPressure_DPS368(&S_DPS368.pressure.raw_value, S_DPS368.prs_osr);
 
 	   	// calculate and update average values and trend sign if available
 	 //calc_double_exp_smoothing(&S_DPS368.pressure);

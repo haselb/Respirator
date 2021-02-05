@@ -23,6 +23,7 @@ extern void RTC_init(void);
 extern void delay100us(uint32_t dwUs);
 extern void update_Pressure(void);
 extern void update_Flow(void);
+extern void update_Temperature(void);
 
 
 
@@ -78,7 +79,11 @@ typedef struct
  struct pressure
 {
 	STRUCT_VALUE_t pressure;//!< pressure
-	uint8_t oversampling;	//!< oversampling factor
+	STRUCT_VALUE_t temperature; //!< temperature
+	uint8_t temp_mr;		//!< temperature measure rate
+	uint8_t temp_osr;		//!< temperature oversampling rate
+	uint8_t prs_mr;			//!< pressure measure rate
+	uint8_t prs_osr;		//!< pressure oversampling rate
 	uint8_t DevID;			//!< if I2C sensor
 	uint8_t location;		//!< where is sensor located
 	uint8_t status;			//!< status of sensor

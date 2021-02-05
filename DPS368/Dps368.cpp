@@ -1,6 +1,6 @@
 
 #include "DPS368\Dps368.h"
-#include "DPS368\dps_config.h"
+#include "DPS368\dps368_config.h"
 #include "DPS368\DpsClass.h"
 
 extern "C" {

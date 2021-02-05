@@ -141,6 +141,11 @@ __WEAK DAVE_STATUS_t DAVE_Init(void)
   {
 	 /**  Initialization of BUS_IO APP instance BUS_O_LCD_D */
 	 init_status = (DAVE_STATUS_t)BUS_IO_Init(&BUS_O_LCD_D); 
+   } 
+  if (init_status == DAVE_STATUS_SUCCESS)
+  {
+	 /**  Initialization of UART APP instance UART_0 */
+	 init_status = (DAVE_STATUS_t)UART_Init(&UART_0); 
    }  
   return init_status;
 } /**  End of function DAVE_Init */

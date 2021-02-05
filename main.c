@@ -13,6 +13,7 @@
 #include "Has_misc.h"
 #include "Cpp2C.h"
 #include "LCM.h"
+#include "motor.h"
 //#include "isot_i2c.h"
 
 
@@ -31,7 +32,7 @@ int main(void)
 {
   DAVE_STATUS_t status;
 
-  status = DAVE_Init();           /* Initialization of DAVE APPs  */
+   status = DAVE_Init();           /* Initialization of DAVE APPs  */
 
   if(status != DAVE_STATUS_SUCCESS)
   {
@@ -49,9 +50,10 @@ int main(void)
   /* Placeholder for user application code. The while loop below can be replaced with user application code. */
   while(1U)
   {
-
+	update_Temperature();
 	update_Pressure();
 //	update_Flow();
+	update_motor();
 //	update_LCD();
 
 

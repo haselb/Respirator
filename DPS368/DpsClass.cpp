@@ -225,6 +225,7 @@ int16_t DpsClass::measureTempOnce(float &result)
 
 int16_t DpsClass::measureTempOnce(float &result, uint8_t oversamplingRate)
 {
+	uint32_t delay_value=0;
 	//Start measurement
 	int16_t ret = startMeasureTempOnce(oversamplingRate);
 	if (ret != DPS__SUCCEEDED)
@@ -232,11 +233,12 @@ int16_t DpsClass::measureTempOnce(float &result, uint8_t oversamplingRate)
 		return ret;
 	}
 
-	//wait until measurement is finished
+	//wait until measurement is finished (delay in arduino domain is 1ms timebase)
 //	delay(calcBusyTime(0U, m_tempOsr) / DPS__BUSYTIME_SCALING);
-	delay100us((calcBusyTime(0U, m_tempOsr)/ DPS__BUSYTIME_SCALING)*10U);
+	delay_value=(calcBusyTime(0U, m_tempOsr)/ DPS__BUSYTIME_SCALING);
+	delay100us(delay_value);
 //	delay(DPS310__BUSYTIME_FAILSAFE);
-	delay100us(DPS310__BUSYTIME_FAILSAFE*10U);
+	delay100us(DPS310__BUSYTIME_FAILSAFE); //10ms idle time
 
 	ret = getSingleResult(result);
 	if (ret != DPS__SUCCEEDED)
@@ -348,7 +350,7 @@ int16_t DpsClass::startMeasureTempCont(uint8_t measureRate, uint8_t oversampling
 		return DPS__FAIL_TOOBUSY;
 	}
 	//abort if speed and precision are too high
-	if (calcBusyTime(measureRate, oversamplingRate) >= DPS310__MAX_BUSYTIME)
+	if (calcBusyTime(measureRate, oversamplingRate) >= DPS310__MAX_BUSYTIME*10U)
 	{
 		return DPS__FAIL_UNFINISHED;
 	}
@@ -383,7 +385,7 @@ int16_t DpsClass::startMeasurePressureCont(uint8_t measureRate, uint8_t oversamp
 		return DPS__FAIL_TOOBUSY;
 	}
 	//abort if speed and precision are too high
-	if (calcBusyTime(measureRate, oversamplingRate) >= DPS310__MAX_BUSYTIME)
+	if (calcBusyTime(measureRate, oversamplingRate) >= DPS310__MAX_BUSYTIME*10U)
 	{
 		return DPS__FAIL_UNFINISHED;
 	}
@@ -419,7 +421,7 @@ int16_t DpsClass::startMeasureBothCont(uint8_t tempMr,
 		return DPS__FAIL_TOOBUSY;
 	}
 	//abort if speed and precision are too high
-	if (calcBusyTime(tempMr, tempOsr) + calcBusyTime(prsMr, prsOsr) >= DPS310__MAX_BUSYTIME)
+	if (calcBusyTime(tempMr, tempOsr) + calcBusyTime(prsMr, prsOsr) >= DPS310__MAX_BUSYTIME*10U)
 	{
 		return DPS__FAIL_UNFINISHED;
 	}
@@ -529,8 +531,8 @@ int16_t DpsClass::configTemp(uint8_t tempMr, uint8_t tempOsr)
 
 int16_t DpsClass::configPressure(uint8_t prsMr, uint8_t prsOsr)
 {
-	prsMr &= 0x07;
-	prsOsr &= 0x07;
+	prsMr  &= 0x07;  // mask out
+	prsOsr &= 0x07;  // mask out
 	int16_t ret = writeByteBitfield(prsMr, config_registers[PRS_MR]);
 	ret = writeByteBitfield(prsOsr, config_registers[PRS_OSR]);
 
@@ -630,7 +632,7 @@ int16_t DpsClass::readByte(uint8_t regAddress)
 
 
 	 //   delay100us(1);
-	    return regValue;
+	    return (regValue);
 
 }
 
@@ -762,6 +764,16 @@ int16_t DpsClass::writeByte(uint8_t regAddress, uint8_t data, uint8_t check)
 	}
 	else
 	{
+		if (check == 0)
+			return 0;					  //no checking
+			if (readByte(regAddress) == data) //check if desired by calling function
+			{
+				return DPS__SUCCEEDED;
+			}
+			else
+			{
+				return DPS__FAIL_UNKNOWN;
+			}
 		delay100us(1);
 		return DPS__SUCCEEDED;
 	}
@@ -844,10 +856,12 @@ int16_t DpsClass::readByteBitfield(RegMask_t regMask)
 	return (((uint8_t)ret) & regMask.mask) >> regMask.shift;
 }
 
+
 int16_t DpsClass::readBlock(RegBlock_t regBlock, uint8_t *buffer)
 {
-	unsigned char x;
-	unsigned char return_values[regBlock.length]={0};
+//	unsigned char x;
+	//unsigned char return_values[regBlock.length]={0};
+
 
 	#ifndef DPS_DISABLESPI
 	//delegate to specialized function if Dps310 is connected via SPI
@@ -892,7 +906,7 @@ int16_t DpsClass::readBlock(RegBlock_t regBlock, uint8_t *buffer)
 	delay100us(200);
 
 	Soft_WDG_1(ON);
-	I2C_MASTER_Receive(&I2C_MASTER_0,true,m_slaveAddress,return_values,regBlock.length,true,true);
+	I2C_MASTER_Receive(&I2C_MASTER_0,true,m_slaveAddress,&buffer[0],regBlock.length,true,true);
 	while((rx_completion_0 == 0) && (flag_I2C_NACK == 0) && (flag_eject_at_I2C_NACK == 0));
 	rx_completion_0 = 0;
 	Soft_WDG_1(OFF);
@@ -905,12 +919,12 @@ int16_t DpsClass::readBlock(RegBlock_t regBlock, uint8_t *buffer)
 	}
 
 
-		for(x=0;x<regBlock.length;x++)
-		{
-			buffer[x] = return_values[x];
-		}
+//		for(x=0;x<regBlock.length;x++)
+//		{
+//			buffer[x] = retValues[x]);
+//		}
 
-    return DPS__SUCCEEDED;
+    return regBlock.length;
 }
 
 void DpsClass::getTwosComplement(int32_t *raw, uint8_t length)
@@ -924,7 +938,9 @@ void DpsClass::getTwosComplement(int32_t *raw, uint8_t length)
 int16_t DpsClass::getRawResult(int32_t *raw, RegBlock_t reg)
 {
 	uint8_t buffer[DPS__RESULT_BLOCK_LENGTH] = {0};
-	if (readBlock(reg, buffer) != DPS__RESULT_BLOCK_LENGTH)
+	uint16_t bus_status=0;
+	bus_status=readBlock(reg, buffer);
+	if (bus_status != DPS__RESULT_BLOCK_LENGTH)
 		return DPS__FAIL_UNKNOWN;
 
 	*raw = (uint32_t)buffer[0] << 16 | (uint32_t)buffer[1] << 8 | (uint32_t)buffer[2];

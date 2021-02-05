@@ -7,6 +7,7 @@
   <upwardMapList xsi:type="ResourceModel:RequiredApp" href="../../PIN_INTERRUPT/v4_0_2/PIN_INTERRUPT_0.app#//@requiredApps.0"/>
   <upwardMapList xsi:type="ResourceModel:RequiredApp" href="../../PIN_INTERRUPT/v4_0_2/PIN_INTERRUPT_1.app#//@requiredApps.0"/>
   <upwardMapList xsi:type="ResourceModel:RequiredApp" href="../../PIN_INTERRUPT/v4_0_2/PIN_INTERRUPT_2.app#//@requiredApps.0"/>
+  <upwardMapList xsi:type="ResourceModel:RequiredApp" href="../../UART/v4_1_12/UART_0.app#//@requiredApps.1"/>
   <properties singleton="true" sharable="true"/>
   <virtualSignals name="nmi_irq" URI="http://resources/4.0.16/app/CPU_CTRL_XMC4/0/vs_nmi_irq" hwSignal="nmi_in" hwResource="//@hwResources.0" visible="true"/>
   <virtualSignals name="jtag tck" URI="http://resources/4.0.16/app/CPU_CTRL_XMC4/0/vs_jtag_tck" hwSignal="db_tck" hwResource="//@hwResources.5" required="false" visible="true"/>

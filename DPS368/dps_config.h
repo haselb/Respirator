@@ -15,7 +15,10 @@
 // DPS310 has 10 milliseconds of spare time for each synchronous measurement / per second for asynchronous measurements
 // this is for error prevention on friday-afternoon-products :D
 // you can set it to 0 if you dare, but there is no warranty that it will still work
-#define DPS310__BUSYTIME_FAILSAFE 10U
+//#define DPS310__BUSYTIME_FAILSAFE 10U  //in Arduino world
+#define DPS310__BUSYTIME_FAILSAFE 100U /* delay_100us()*/
+
+
 #define DPS310__MAX_BUSYTIME ((1000U - DPS310__BUSYTIME_FAILSAFE) * DPS__BUSYTIME_SCALING)
 
 #define DPS310__REG_ADR_SPI3W 0x09U
@@ -51,7 +54,8 @@
 #define DPS__OVERSAMPLING_RATE_128 DPS__MEASUREMENT_RATE_128
 
 //we use 0.1 ms units for time calculations, so 10 units are one millisecond
-#define DPS__BUSYTIME_SCALING 10U
+//#define DPS__BUSYTIME_SCALING 10U  --> in Arduino world
+#define DPS__BUSYTIME_SCALING 1U  /*-- by delay_100us()*/
 
 #define DPS__NUM_OF_SCAL_FACTS 8
 
